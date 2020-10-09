@@ -8,6 +8,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 from marshmallow import Schema, fields
+from marshmallow.schema import SchemaMeta
 
 
 __version__ = '0.1.0'
@@ -72,7 +73,14 @@ def add_data_wrapper(ToWrapSchema):
         >>> add_data_wrapper(MySchema).dump({'data': items})
         {"data": [{"name": "xxx"}, {"name": "yyy"}]}
     """
-    class DataSchema(Schema):
+    class DataSchemaMeta(SchemaMeta):
+
+        __name__ = 'Wrapped' + ToWrapSchema.__name__
+
+        def __init__(self, name, bases, attrs):
+            super().__init__(self.__name__, bases, attrs)
+
+    class DataSchema(Schema, metaclass=DataSchemaMeta):
         data = fields.List(fields.Nested(ToWrapSchema))
     return DataSchema
 
