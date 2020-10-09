@@ -35,6 +35,7 @@ MOVIES = [
 ]
 
 
+# Marshmallow schemas.
 class UserSchema(Schema):
     id = fields.Integer()
     email = fields.String()
@@ -121,6 +122,7 @@ def movies_list():
     return jsonify(resp)
 
 
+# Setup apispec to generate documentation
 spec = APISpec(
     title='Swagger Petstore',
     version=__version__,
@@ -129,12 +131,14 @@ spec = APISpec(
 )
 
 
+# Register routes for documentation
 with app.test_request_context():
     spec.path(view=users_list)
     spec.path(view=books_list)
     spec.path(view=movies_list)
 
 
+# Endpoint consumed by swagger-ui
 @app.route('/swagger.json')
 def swagger():
     return jsonify(spec.to_dict())
