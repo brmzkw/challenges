@@ -55,6 +55,23 @@ class MovieSchema(Schema):
 
 
 def add_data_wrapper(ToWrapSchema):
+    """This function exists to avoid code duplication. It returns a marshmallow
+    Schema with one field, "data", which is a nested field to the Schema
+    provided as argument.
+
+    Examples:
+
+        >>> class MySchema(Schema):
+        ...     name = fields.String()
+
+        >>> items = [{"name": "xxx"}, {"name": "yyy"}]
+
+        >>> MySchema().dump(items, many=True)
+        [{"name": "xxx"}, {"name": "yyy"}]
+
+        >>> add_data_wrapper(MySchema).dump({'data': items})
+        {"data": [{"name": "xxx"}, {"name": "yyy"}]}
+    """
     class DataSchema(Schema):
         data = fields.List(fields.Nested(ToWrapSchema))
     return DataSchema
