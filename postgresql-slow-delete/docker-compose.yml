@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/001-database.sql:ro
+      - ./fixtures.sql:/docker-entrypoint-initdb.d/002-fixtures.sql:ro
+    environment:
+      POSTGRES_PASSWORD: password
